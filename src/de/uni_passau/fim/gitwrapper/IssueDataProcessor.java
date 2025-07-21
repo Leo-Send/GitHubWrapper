@@ -266,6 +266,15 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
         }
         Pattern hashtagPattern;
 
+        // filter out everything in code block
+        String[] texts = text.split("```");
+        text = "";
+        for (int i = 0; i < texts.length; i++) {
+            if (i % 2 == 0) {
+                text = text + texts[i];
+            }
+        }
+
         if (onlyInSameRepo) {
             String repoName = repo.getRepoName();
             String repoUser = repo.getRepoUser();
@@ -383,6 +392,7 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
             Optional<List<ReferencedLink<String>>> comments = repo.getComments(lookup);
             result.setComments(comments.orElse(Collections.emptyList()));
         }
+
         if (result.getEventsList() == null) {
             Optional<List<EventData>> events = repo.getEvents(lookup);
             result.setEvents(events.orElse(Collections.emptyList()));
