@@ -44,7 +44,6 @@ class EventDataProcessor implements JsonDeserializer<EventData>, JsonSerializer<
         map.put("unlabeled", EventData.LabeledEventData.class);
         map.put("referenced", EventData.ReferencedEventData.class);
         map.put("merged", EventData.ReferencedEventData.class);
-        map.put("closed", EventData.ReferencedEventData.class);
         map.put("closed", EventData.StateChangedEventData.class);
         map.put("connected", EventData.ConnectedEventData.class);
         map.put("reopened", EventData.StateChangedEventData.class);
