@@ -2,6 +2,7 @@
  * Copyright (C) 2016-2020 Florian Heck
  * Copyright (C) 2018 Claus Hunsen
  * Copyright (C) 2019-2021 Thomas Bock
+ * Copyright (C) 2025 Leo Sendelbach
  *
  * This file is part of GitHubWrapper.
  *

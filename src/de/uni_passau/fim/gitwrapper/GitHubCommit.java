@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2019 Thomas Bock
+ * Copyright (C) 2025 Leo Sendelbach
  *
  * This file is part of GitHubWrapper.
  *
