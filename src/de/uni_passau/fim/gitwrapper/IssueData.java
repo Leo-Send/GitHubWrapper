@@ -53,6 +53,7 @@ public class IssueData implements GitHubRepository.IssueDataCached {
     private List<ReviewData> reviewsList;
     private List<ReferencedLink<GitHubCommit>> relatedCommits;
     List<ReferencedLink<Integer>> relatedIssues;
+    private List<Integer> subIssues;
 
     transient GitHubRepository repo;
     private transient boolean frozen;
@@ -100,6 +101,16 @@ public class IssueData implements GitHubRepository.IssueDataCached {
      */
     void setRelatedCommits(List<ReferencedLink<GitHubCommit>> commits) {
         relatedCommits = commits;
+    }
+
+    /**
+     * Sets a list of sub-issues to this Issue.
+     *
+     * @param issues
+     *         the list of issue numbers
+     */
+    void setSubIssues(List<Integer> issues) {
+        subIssues = issues;
     }
 
     /**
@@ -285,6 +296,15 @@ public class IssueData implements GitHubRepository.IssueDataCached {
      */
     public List<ReferencedLink<GitHubCommit>> getRelatedCommits() {
         return relatedCommits;
+    }
+
+    /**
+     * Gets a List of all sub-issues that belong to the Issue.
+     *
+     * @return a List of sub-issues in form of a list containing their issue numbers
+     */
+    public List<Integer> getSubIssues() {
+        return subIssues;
     }
 
     /**

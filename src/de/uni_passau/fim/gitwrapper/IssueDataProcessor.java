@@ -232,6 +232,28 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
     }
 
     /**
+     * Parse subissues
+     *
+     * @param issue
+     *         the Issue to analyze
+     * @param gson
+     *         the Gson used to deserialize
+     * @return a list of all Issue numbers of sub-issues
+     */
+    List<Integer> parseSubIssues(IssueData issue, Gson gson) {
+
+        Optional<String> subIssueJson = repo.getJSONStringFromURL(issueBaseUrl + issue.number + "/sub_issues");
+
+        if (subIssueJson.isEmpty()) {
+            return new ArrayList<Integer>();
+        }
+        ArrayList<JsonElement> list = gson.fromJson(subIssueJson.get(), new TypeToken<ArrayList<JsonElement>>() {}.getType());
+        return list.stream().map(s -> (((IssueData) gson.fromJson(s, new TypeToken<IssueDataCached>() {}.getType())).getNumber()))
+                                       .filter(Objects::nonNull)
+                                       .collect(Collectors.toList());
+    }
+
+    /**
      * Extracts theoretically valid commit hashes from text.
      *
      * @param text
@@ -242,7 +264,17 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
         if (text == null) {
             return Collections.emptyList();
         }
-        Pattern sha1Pattern = Pattern.compile("([0-9a-f]{5,40})");
+
+        // filter out everything in code block
+        String[] texts = text.split("```");
+        text = "";
+        for (int i = 0; i < texts.length; i++) {
+            if (i % 2 == 0) {
+                text = text + texts[i];
+            }
+        }
+
+        Pattern sha1Pattern = Pattern.compile("([0-9a-f]{7,40})");
         Matcher matcher = sha1Pattern.matcher(text);
 
         List<String> sha1s = new ArrayList<>();
@@ -455,6 +487,10 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
 
         if (result.relatedIssues == null) {
             result.setRelatedIssues(parseIssues(result, gson));
+        }
+
+        if (result.getSubIssues() == null) {
+            result.setSubIssues(parseSubIssues(result, gson));
         }
 
         workingQueue.remove(result.number);

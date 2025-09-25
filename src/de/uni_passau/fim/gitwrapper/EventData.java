@@ -33,6 +33,7 @@ public abstract class EventData {
     UserData user;
     OffsetDateTime created_at;
     String event;
+    Long id;
 
     /**
      * The User that created the Event.
