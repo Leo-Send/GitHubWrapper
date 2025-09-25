@@ -3,6 +3,7 @@
  * Copyright (C) 2018 Claus Hunsen
  * Copyright (C) 2019-2021 Thomas Bock
  * Copyright (C) 2025 Leo Sendelbach
+ * Copyright (C) 2025 Shiraz Jafri
  *
  * This file is part of GitHubWrapper.
  *

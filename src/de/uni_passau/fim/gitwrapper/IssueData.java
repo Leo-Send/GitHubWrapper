@@ -1,6 +1,8 @@
 /**
  * Copyright (C) 2016-2018 Florian Heck
  * Copyright (C) 2019 Thomas Bock
+ * Copyright (C) 2025 Leo Sendelbach
+ * Copyright (C) 2025 Shiraz Jafri
  *
  * This file is part of GitHubWrapper.
  *
