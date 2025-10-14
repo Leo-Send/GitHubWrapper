@@ -429,7 +429,6 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
         String stateReasonValue = (stateReasonElement != null && !stateReasonElement.isJsonNull()) 
             ? stateReasonElement.getAsString() 
             : null;
-        result.state_reason = StateReason.getFromString(stateReasonValue);
 
         JsonElement typeElement = src.getAsJsonObject().get("type");
         if (typeElement != null && !typeElement.isJsonNull()) {

@@ -46,17 +46,15 @@ class EventDataProcessor implements JsonDeserializer<EventData>, JsonSerializer<
         map.put("referenced", EventData.ReferencedEventData.class);
         map.put("merged", EventData.ReferencedEventData.class);
         map.put("closed", EventData.StateChangedEventData.class);
-        map.put("connected", EventData.ConnectedEventData.class);
         map.put("reopened", EventData.StateChangedEventData.class);
+        map.put("connected", EventData.ConnectedEventData.class);
         map.put("issue_type_added", EventData.IssueTypeChangedEventData.class);
         map.put("issue_type_changed", EventData.IssueTypeChangedEventData.class);
         map.put("issue_type_removed", EventData.IssueTypeChangedEventData.class);
         map.put("parent_issue_added", EventData.ParentIssueChangedEventData.class);
         map.put("parent_issue_removed", EventData.ParentIssueChangedEventData.class);
-        map.put("parent_issue_changed", EventData.ParentIssueChangedEventData.class);
         map.put("sub_issue_added", EventData.SubIssueChangedEventData.class);
         map.put("sub_issue_removed", EventData.SubIssueChangedEventData.class);
-        map.put("sub_issue_changed", EventData.SubIssueChangedEventData.class);
         map.put("review_requested", EventData.RequestedReviewEventData.class);
         map.put("review_request_removed", EventData.RequestedReviewEventData.class);
         map.put("review_dismissed", EventData.DismissedReviewEventData.class);
@@ -181,6 +179,18 @@ class EventDataProcessor implements JsonDeserializer<EventData>, JsonSerializer<
      */
     static class StateChangedEventProcessor implements PostProcessor<EventData.StateChangedEventData> {
 
+        private GitHubRepository repo;
+
+        /**
+         * Creates a new EventDataProcessor for the given repo.
+         *
+         * @param repo
+         *         the repo
+         */
+        StateChangedEventProcessor(GitHubRepository repo) {
+            this.repo = repo;
+        }
+
         @Override
         public void postDeserialize(EventData.StateChangedEventData result, JsonElement src, Gson gson) {
             JsonElement stateReasonElement = src.getAsJsonObject().get("state_reason");
@@ -188,6 +198,20 @@ class EventDataProcessor implements JsonDeserializer<EventData>, JsonSerializer<
             ? stateReasonElement.getAsString() 
             : null;
             result.state_reason = StateReason.getFromString(stateReasonValue);
+
+            JsonElement hash = src.getAsJsonObject().get("commit_id");
+            if (hash.isJsonNull()) {
+                return;
+            }
+
+            result.commit = repo.getGithubCommit(hash.getAsString()).orElseGet(() -> {
+                LOG.warning("Found commit unknown to GitHub and local git repo: " + hash + " Retry using url...");
+                JsonElement url = src.getAsJsonObject().get("commit_url");
+                return repo.getGithubCommitUrl(hash.getAsString(), url.getAsString()).orElseGet(() -> {
+                    LOG.warning("Could not find commit: " + hash);
+                    return null;
+                });
+            });
         }
 
         @Override
@@ -205,34 +229,6 @@ class EventDataProcessor implements JsonDeserializer<EventData>, JsonSerializer<
 
         @Override
         public void postSerialize(JsonElement result, EventData.IssueTypeChangedEventData src, Gson gson) {
-        }
-    }
-
-    /**
-     * Processor for parent issue change events.
-     */
-    static class ParentIssueChangedEventProcessor implements PostProcessor<EventData.ParentIssueChangedEventData> {
-
-        @Override
-        public void postDeserialize(EventData.ParentIssueChangedEventData result, JsonElement src, Gson gson) {
-        }
-
-        @Override
-        public void postSerialize(JsonElement result, EventData.ParentIssueChangedEventData src, Gson gson) {
-        }
-    }
-
-    /**
-     * Processor for sub-issue change events.
-     */
-    static class SubIssueChangedEventProcessor implements PostProcessor<EventData.SubIssueChangedEventData> {
-
-        @Override
-        public void postDeserialize(EventData.SubIssueChangedEventData result, JsonElement src, Gson gson) {
-        }
-
-        @Override
-        public void postSerialize(JsonElement result, EventData.SubIssueChangedEventData src, Gson gson) {
         }
     }
 

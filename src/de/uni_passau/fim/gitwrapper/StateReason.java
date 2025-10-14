@@ -40,28 +40,17 @@ public enum StateReason {
     /**
      * Denotes that the Issue or PullRequest was a duplicate.
      */
-    DUPLICATE,
-
-    /**
-     * Denotes that the state reason is not known or not specified.
-     * This can be used when the state reason is not applicable or not provided.
-     */
-    NONE,
-
-    /**
-     * Any state reason is included (can be used for unknown reasons).
-     */
-    ANY;
+    DUPLICATE;
 
     /**
      * Gets the StateReason from a string.
      *
      * @param string the string to convert
-     * @return the corresponding StateReason, or ANY if no match is found
+     * @return the corresponding StateReason, the default case being 'COMPLETED'
      */
     public static StateReason getFromString(String string) {
         if (string == null) {
-            return NONE;
+            return COMPLETED;
         }
 
         switch (string.toLowerCase()) {
@@ -74,7 +63,7 @@ public enum StateReason {
             case "duplicate":
                 return DUPLICATE;
             default:
-                return ANY;
+                return COMPLETED;
         }
     }
 }
