@@ -27,7 +27,7 @@ public class GitHubCommit extends Commit {
     private String authorUsername;
     private String committerUsername;
     private boolean addedToPullRequest = false;
-    private boolean isExternal = false;
+    private boolean external = false;
 
     /**
      * Constructs a new {@link GitHubCommit} with the given <code>id</code> made in the <code>repo</code>.
@@ -122,11 +122,22 @@ public class GitHubCommit extends Commit {
         this.addedToPullRequest = added;
     }
 
-    void setExternal(boolean external) {
-        this.isExternal = true;
+    /**
+     * Returns whether this commit is an external commit.
+     * 
+     * @return whether this commit is an external commit
+     */
+    boolean isExternal() {
+        return this.external;
     }
 
-    boolean getExternal() {
-        return this.isExternal;
+    /**
+     * Sets whether this commit is an external commit
+     * 
+     * @param external this commit is an external commit
+     */
+    void setExternal(boolean external) {
+        this.external = external;
     }
+    
 }

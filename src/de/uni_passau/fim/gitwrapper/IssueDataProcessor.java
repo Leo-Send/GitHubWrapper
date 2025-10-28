@@ -78,7 +78,7 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
                 // filter out errors from referencing commits
                 .filter(eventData -> ((EventData.ReferencedEventData) eventData).commit != null)
                 .map(eventData -> {
-                    if (((GitHubCommit) ((EventData.ReferencedEventData) eventData).commit).getExternal()) {
+                    if (((GitHubCommit) ((EventData.ReferencedEventData) eventData).commit).isExternal()) {
                         return new ReferencedLink<>(Collections.singletonList(((EventData.ReferencedEventData) eventData).commit.getId()), eventData.user, eventData.created_at, "commitReferencesIssueExternal");
                     } else {
                         return new ReferencedLink<>(Collections.singletonList(((EventData.ReferencedEventData) eventData).commit.getId()), eventData.user, eventData.created_at, "commitReferencesIssue");
