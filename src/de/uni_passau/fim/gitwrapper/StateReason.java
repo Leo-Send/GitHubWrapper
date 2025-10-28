@@ -63,7 +63,8 @@ public enum StateReason {
             case "duplicate":
                 return DUPLICATE;
             default:
-                return COMPLETED;
+                throw new IllegalArgumentException("Found state reason (" + string + ") that was neither 'completed'," +
+                                                    "'reopened', 'not_planned'. nor 'duplicate'!");
         }
     }
 }
