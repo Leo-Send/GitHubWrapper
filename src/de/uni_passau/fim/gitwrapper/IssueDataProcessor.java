@@ -271,12 +271,13 @@ public class IssueDataProcessor implements JsonDeserializer<IssueDataCached>, Po
 
         // filter out everything in code block
         String[] texts = text.split("```");
-        text = "";
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < texts.length; i++) {
             if (i % 2 == 0) {
-                text = text + texts[i];
+                sb.append(texts[i]);
             }
         }
+        text = sb.toString();
 
         if (onlyInSameRepo) {
             String repoName = repo.getRepoName();
