@@ -64,6 +64,7 @@ public class ReferencedLinkProcessor implements JsonDeserializer<ReferencedLink>
                 }
                 if (!json.getAsJsonObject().get("body").isJsonNull()) {
                     commentData.body = json.getAsJsonObject().get("body").getAsString();
+                    commentData.suggestion = commentData.body.contains("```suggestion") || commentData.body.contains("```suggestion");
                 } else {
                     commentData.body = "";
                 }
@@ -99,6 +100,7 @@ public class ReferencedLinkProcessor implements JsonDeserializer<ReferencedLink>
                     commentData.commit_id = json.getAsJsonObject().get("commit_id").getAsString();
                     commentData.original_commit_id = json.getAsJsonObject().get("original_commit_id").getAsString();
                     commentData.body = json.getAsJsonObject().get("body").getAsString();
+                    commentData.suggestion = commentData.body.contains("```suggestion") || commentData.body.contains("```suggestion");
                     result.target = commentData;
                 } else {
                     // normal comment
@@ -158,6 +160,7 @@ public class ReferencedLinkProcessor implements JsonDeserializer<ReferencedLink>
                 result.getAsJsonObject().addProperty("original_position", ((ReviewCommentData) src.getTarget()).getOriginalPosition());
                 result.getAsJsonObject().addProperty("commit_id", ((ReviewCommentData) src.getTarget()).getCommitId());
                 result.getAsJsonObject().addProperty("original_commit_id", ((ReviewCommentData) src.getTarget()).getOriginalCommitId());
+                result.getAsJsonObject().addProperty("contains_suggestion", ((ReviewCommentData) src.getTarget()).containsSuggestion());
                 result.getAsJsonObject().remove("target");
                 break;
             case "Integer":
